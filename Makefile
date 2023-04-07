@@ -60,8 +60,8 @@ clean: ## Cleanup tmp files
 	@rm -f **/*.zip **/*.tar **/*.tgz **/*.gz
 
 output:
-	@echo -e $(bold)$(primary)cloudfront$(clear) $(shell terraform -chdir=plans output cloudfront_trivialscan_dashboard)
-	@echo -e $(bold)$(primary)bucket$(clear) $(shell terraform -chdir=plans output trivialscan_dashboard_bucket)
+	@echo -e $(bold)$(primary)cloudfront$(clear) $(shell terraform -chdir=plans output cloudfront_user_docs)
+	@echo -e $(bold)$(primary)bucket$(clear) $(shell terraform -chdir=plans output user_docs_bucket)
 
 env:
 	@echo -e $(bold)$(primary)CI_BUILD_REF$(clear) = $(CI_BUILD_REF)
@@ -82,6 +82,10 @@ plan:  ## Runs tf validate and tf plan
 apply: ## tf apply -auto-approve -refresh=true
 	terraform -chdir=plans apply -auto-approve -refresh=true .tfplan
 
+build: ## mkdocs build
+	mkdocs build
+	cp src/img/favicon.png dist/assets/images/favicon.png
+
 destroy:  ## tf destroy -auto-approve
 	terraform -chdir=plans validate
 	terraform -chdir=plans plan -destroy -no-color -out=.tfdestroy
@@ -94,8 +98,8 @@ test-local:  ## Prettier test outputs
 
 clear-cf:  ## AWS CloudFront cache invalidation
 	aws cloudfront create-invalidation \
-		--distribution-id $(shell terraform -chdir=plans output -raw cloudfront_trivialscan_dashboard) \
-		--paths "/favicon.png" "/index.html" "/robots.txt" "/.well-known/*" "/manifest.json" "/assets/*.js" "/assets/*.ttf" "/assets/*.map" "/assets/*.svg" "/assets/*.png" "/assets/*.css"
+		--distribution-id $(shell terraform -chdir=plans output -raw cloudfront_user_docs) \
+		--paths "/**/*.html" "/assets/**/*.js" "/assets/**/*.png" "/assets/**/*.css"
 
 local-runner: ## local setup for a gitlab runner
 	@docker volume create --name=gitlab-cache 2>/dev/null || true
