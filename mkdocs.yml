@@ -1,5 +1,7 @@
 site_name: Trivial Security
 site_url: https://docs.trivialsec.com/
+extra:
+  homepage: https://www.trivialsec.com/
 repo_url: https://github.com/trivialsec/trivialscan
 repo_name: GitHub
 docs_dir: src
