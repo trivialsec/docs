@@ -1,0 +1,27 @@
+site_name: Trivial Security
+site_url: https://docs.trivialsec.com/
+repo_url: https://github.com/trivialsec/trivialscan
+repo_name: GitHub
+docs_dir: src
+site_dir: dist
+use_directory_urls: false
+theme:
+  name: material
+  custom_dir: overrides
+  locale: en
+  highlightjs: true
+  logo: img/favicon.png
+strict: true
+copyright: Copyright &copy; Trivial Security
+markdown_extensions:
+  - smarty
+  - toc:
+      permalink: True
+  - sane_lists
+  - nl2br
+extra_css:
+  - stylesheets/extra.css
+nav:
+  - Introduction: index.md
+  - "User Guide":
+      - "Getting Started": "getting-started.md"
