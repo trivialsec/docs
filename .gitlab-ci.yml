@@ -1,9 +1,7 @@
 variables:
-  BUILD_ENV: ci
-  TF_VAR_app_name: trivialscan-dashboard
+  TF_VAR_app_name: user-docs
   TF_LOG: WARN
   SOURCE_FILES: dist/
-  NODE_ENV: development
   APP_ENV: Dev
   TF_VAR_app_env: Dev
 
