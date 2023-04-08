@@ -53,16 +53,16 @@ resource "aws_cloudfront_response_headers_policy" "dashboard_security_headers_po
       content_security_policy = join("; ", [
         "frame-ancestors 'none'",
         "default-src 'self'",
-        "img-src 'self' https://asciinema.org data:",
+        "img-src 'self' https://asciinema.org https://cdnjs.cloudflare.com data:",
         "script-src 'self' 'unsafe-eval' https://www.gstatic.com https://www.google.com",
-        "script-src-elem 'self' https://cdn.jsdelivr.net",
+        "script-src-elem 'self' https://cdn.jsdelivr.net 'unsafe-inline'",
         "font-src 'self' https://fonts.gstatic.com data:",
         "object-src 'none'",
         "form-action 'none'",
         "worker-src 'self' blob:",
-        "frame-src https://cdn.forms-content.sg-form.com",
+        "frame-src https://cdn.forms-content.sg-form.com https://www.youtube-nocookie.com",
         "style-src 'self' https://fonts.googleapis.com 'unsafe-inline'",
-        "connect-src 'self' ${var.app_env != "Prod" ? data.terraform_remote_state.dev_lambda_api.outputs.function_url : data.terraform_remote_state.prod_lambda_api.outputs.function_url}",
+        "connect-src 'self' https://api.github.com ${var.app_env != "Prod" ? data.terraform_remote_state.dev_lambda_api.outputs.function_url : data.terraform_remote_state.prod_lambda_api.outputs.function_url}",
       ])
       override = true
     }

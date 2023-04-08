@@ -1,27 +1,143 @@
 site_name: Trivial Security
 site_url: https://docs.trivialsec.com/
+extra:
+  homepage: https://www.trivialsec.com/
 repo_url: https://github.com/trivialsec/trivialscan
 repo_name: GitHub
 docs_dir: src
 site_dir: dist
 use_directory_urls: false
-theme:
-  name: material
-  custom_dir: overrides
-  locale: en
-  highlightjs: true
-  logo: img/favicon.png
 strict: true
 copyright: Copyright &copy; Trivial Security
 markdown_extensions:
-  - smarty
+  - pymdownx.emoji
   - toc:
       permalink: True
-  - sane_lists
-  - nl2br
+theme:
+  name: material
+  custom_dir: overrides
+  logo: img/favicon.png
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: black
+      toggle:
+        icon: material/weather-night
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: black
+      toggle:
+        icon: material/brightness-7
+        name: Switch to light mode
+
 extra_css:
   - stylesheets/extra.css
 nav:
   - Introduction: index.md
   - "User Guide":
-      - "Getting Started": "getting-started.md"
+      - "Getting Started": user-guide/getting-started.md
+      - "Scanners": user-guide/scanners.md
+  - "Evaluation Rules":
+      - "1.0 TLS Negotiation":
+          - "1.1 Basic Constraints Extension valid path length": rules/issue_1.1.md
+          - "1.2 Known exploited and deprecated CBC ciphers offered": rules/issue_1.2.md
+          - "1.3 Client Certificate (MTLS) expected": rules/issue_1.3.md
+          - "1.4 Certificate was issued for the purpose of client Authentication": rules/issue_1.4.md
+          - "1.5 Client Certificate (MTLS) Trusted": rules/issue_1.5.md
+          - "1.6 Server accepted Client Certificate": rules/issue_1.6.md
+          - "1.7 Client Authentication Established": rules/issue_1.7.md
+          - "1.8 Client initiated TLS renegotiation": rules/issue_1.8.md
+          - "1.9 Deprecated TLS protocol negotiated": rules/issue_1.9.md
+          - "1.11 Downgrade attack prevention (SCSV)": rules/issue_1.11.md
+          - "1.12 Negotiated cipher applies Forward Anonymity (aka PFS)": rules/issue_1.12.md
+          - "1.13 Known weak ciphers negotiated": rules/issue_1.13.md
+          - "1.14 Known weak ciphers offered": rules/issue_1.14.md
+          - "1.15 TLS Long Handshake Intolerance": rules/issue_1.15.md
+          - "1.16 Only strong ciphers offered": rules/issue_1.16.md
+          - "1.17 Known exploited and deprecated RC4 ciphers offered": rules/issue_1.17.md
+          - "1.18 Secure Renegotiation": rules/issue_1.18.md
+          - "1.19 Session resumption caching": rules/issue_1.19.md
+          - "1.20 Session resumption ticket hints": rules/issue_1.20.md
+          - "1.21 Session resumption tickets": rules/issue_1.21.md
+          - "1.22 Strong ciphers negotiated": rules/issue_1.22.md
+          - "1.23 Strong ciphers offered": rules/issue_1.23.md
+          - "1.24 ROBOT Vulnerability": rules/issue_1.24.md
+          - "1.25 Valid Certificate Chain": rules/issue_1.25.md
+          - "1.26 TLS Version Interference": rules/issue_1.26.md
+          - "1.27 TLS Version Intolerance": rules/issue_1.27.md
+      - "2.0 Certificate":
+          - "2.1 Certification Authority Authorization (CAA) Present": rules/issue_2.1.md
+          - "2.2 Certification Authority Authorization (CAA) Valid": rules/issue_2.2.md
+          - "2.3 Certificate is not expired": rules/issue_2.3.md
+          - "2.4 Avoid deprecated DNSSEC algorithm": rules/issue_2.4.md
+          - "2.4 DNSSEC Present": rules/issue_2.5.md
+          - "2.6 DNSSEC Valid": rules/issue_2.6.md
+          - "2.7 Certificate self-signed": rules/issue_2.7.md
+          - "2.8 Known Weak key usage": rules/issue_2.8.md
+          - "2.9 Deprecated or known weak signature algorithm": rules/issue_2.9.md
+          - "2.10 Leaf Certificate allows impersonation": rules/issue_2.10.md
+          - "2.11 Malicious Certificate": rules/issue_2.11.md
+          - "2.12 Known Compromised Private Key": rules/issue_2.12.md
+          - "2.13 Intermediate Certificate Revocation (crlite)": rules/issue_2.13.md
+          - "2.14 Deprecated OCSP Hash Algorithm": rules/issue_2.14.md
+          - "2.15 Deprecated OCSP Signature Algorithm": rules/issue_2.15.md
+          - "2.16 OCSP Must Staple Extension": rules/issue_2.16.md
+          - "2.17 OCSP Stapling Extension": rules/issue_2.17.md
+          - "2.18 OCSP Revocation": rules/issue_2.18.md
+          - "2.19 RSA public key exponent has known issues": rules/issue_2.19.md
+          - "2.20 Strong Issuer Validation": rules/issue_2.20.md
+          - "2.21 TLS/A": rules/issue_2.21.md
+          - "2.22 Certificate Transparency present": rules/issue_2.22.md
+          - "2.23 Trustworthy Certificate Transparency": rules/issue_2.23.md
+          - "2.24 Android 2.2 Froyo": rules/issue_2.24.md
+          - "2.25 Android 2.3 Gingerbread": rules/issue_2.25.md
+          - "2.26 Android 3 Honeycomb": rules/issue_2.26.md
+          - "2.27 Android 4 Ice Cream Sandwich": rules/issue_2.27.md
+          - "2.28 Android 4.4 KitKat": rules/issue_2.28.md
+          - "2.29 Android 7 Nougat": rules/issue_2.29.md
+          - "2.30 Android 8 Oreo": rules/issue_2.30.md
+          - "2.31 Android 9 Pie": rules/issue_2.31.md
+          - "2.32 Android 10 Quince Tart": rules/issue_2.32.md
+          - "2.33 Android 11 Red Velvet Cake": rules/issue_2.33.md
+          - "2.34 Android 12 Snow Cone": rules/issue_2.34.md
+          - "2.35 Android 13 Tiramisu": rules/issue_2.35.md
+          - "2.36 Android 14 Upside Down Cake": rules/issue_2.36.md
+          - "2.37 CCADB": rules/issue_2.37.md
+          - "2.38 certifi (Python module)": rules/issue_2.38.md
+          - "2.39 Dart Native": rules/issue_2.39.md
+          - "2.40 Java SE": rules/issue_2.40.md
+          - "2.41 libcurl": rules/issue_2.41.md
+          - "2.42 MinTsifry Rossii (Russian)": rules/issue_2.42.md
+          - "2.43 Rustls": rules/issue_2.43.md
+          - "2.44 Valid Certificate Common Name": rules/issue_2.44.md
+          - "2.45 Hostname matches Certificate": rules/issue_2.45.md
+          - "2.46 Valid NotBefore date": rules/issue_2.46.md
+          - "2.47 Leaf Certificate valid for TLS usage": rules/issue_2.47.md
+          - "2.48 Weak Issuer Validation": rules/issue_2.48.md
+          - "2.49 Known Weak RSA public key exponent": rules/issue_2.49.md
+          - "2.50 X.509 Certificates are in version 3": rules/issue_2.50.md
+          - "2.51 Certificate is about to expire": rules/issue_2.51.md
+      - "3.0 Compliance":
+          - "3.1 PCI DSS 3.2.1": rules/issue_3.1.md
+          - "3.2 PCI DSS 4.0": rules/issue_3.2.md
+          - "3.3 FIPS 140-2 (NIST SP800-131A transition mode)": rules/issue_3.3.md
+          - "3.4 NIST SP800-131A (strict mode)": rules/issue_3.4.md
+          - "3.5 FIPS 140-2 Annex A": rules/issue_3.5.md
+      - "4.0 HTTP Transport":
+          - "4.1 HTTPS transport compression": rules/issue_4.1.md
+          - "4.2 CRIME/BEAST Vulnerability": rules/issue_4.2.md
+          - "4.3 HTTP/2 cleartext": rules/issue_4.3.md
+          - "4.4 Block reading clipboard contents": rules/issue_4.4.md
+          - "4.5 Block the use of deprecated APIs": rules/issue_4.5.md
+          - "4.6 Require Cross-Origin-Embedder-Policy": rules/issue_4.6.md
+          - "4.7 Same-Origin Cross-Origin-Opener-Policy": rules/issue_4.7.md
+          - "4.8 Same-Origin Cross-Origin-Resource-Policy": rules/issue_4.8.md
+          - "4.9 Content-Security-Policy": rules/issue_4.9.md
+          - "4.11 HTTP Strict-Transport-Security": rules/issue_4.11.md
+          - "4.12 nosniff X-Content-Type-Options": rules/issue_4.12.md
+          - "4.13 Policy-controlled browser features": rules/issue_4.13.md
+          - "4.14 unsafe URL Referrer-Policy": rules/issue_4.14.md
+          - "4.15 Upgrade Insecure Requests": rules/issue_4.15.md
+          - "4.16 Safe HTML iframe options": rules/issue_4.16.md
+          - "4.17 Block mode XSS-Protection": rules/issue_4.17.md
