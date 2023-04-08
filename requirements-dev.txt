@@ -3,3 +3,4 @@ detect-secrets
 semgrep
 mkdocs
 mkdocs-material
+mkdocs-material-extensions
