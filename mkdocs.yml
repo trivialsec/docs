@@ -37,7 +37,7 @@ nav:
   - Introduction: index.md
   - "User Guide":
       - "Getting Started": user-guide/getting-started.md
-      - "Scanners": user-guide/scanners.md
+      - "Using the Scanners": user-guide/scanners.md
   - "Evaluation Rules":
       - "1.0 TLS Negotiation":
           - "1.1 Basic Constraints Extension valid path length": rules/issue_1.1.md
