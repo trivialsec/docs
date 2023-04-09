@@ -15,24 +15,6 @@ ifeq ($(CI_BUILD_REF), local)
 export $(shell sed 's/=.*//' .env.local 2>/dev/null)
 endif
 
-ifeq ($(NODE_ENV), development)
--include .env.development
-export $(shell sed 's/=.*//' .env.development 2>/dev/null)
-ifeq ($(CI_BUILD_REF), local)
--include .env.development.local
-export $(shell sed 's/=.*//' .env.development.local 2>/dev/null)
-endif
-endif
-
-ifeq ($(NODE_ENV), production)
--include .env.production
-export $(shell sed 's/=.*//' .env.production 2>/dev/null)
-ifeq ($(CI_BUILD_REF), local)
--include .env.production.local
-export $(shell sed 's/=.*//' .env.production.local 2>/dev/null)
-endif
-endif
-
 ifndef RUNNER_NAME
 RUNNER_NAME=$(shell basename $(shell pwd))
 endif
@@ -42,14 +24,10 @@ help: ## This help.
 
 .DEFAULT_GOAL := help
 
-deps: ## install dependancies for development of this project
-	python3 -m venv .venv
-	source .venv/bin/activate
+deps: ## install dependancies for development of this project; assumes `python3 -m venv .venv && source .venv/bin/activate`
 	pip install -U pip
 	pip install -U setuptools wheel
 	pip install -U -r requirements-dev.txt
-	nvm install --lts
-	npm i
 	terraform -chdir=plans -install-autocomplete || true
 	pre-commit install --hook-type pre-push --hook-type pre-commit
 	@ [ -f .secrets.baseline ] || ( detect-secrets scan > .secrets.baseline )
@@ -75,6 +53,7 @@ refresh: ## Runs tf refresh
 	terraform -chdir=plans refresh
 
 plan:  ## Runs tf validate and tf plan
+	terraform -chdir=plans fmt
 	terraform -chdir=plans validate
 	terraform -chdir=plans plan -no-color -out=.tfplan
 	terraform -chdir=plans show --json .tfplan | jq -r '([.resource_changes[]?.change.actions?]|flatten)|{"create":(map(select(.=="create"))|length),"update":(map(select(.=="update"))|length),"delete":(map(select(.=="delete"))|length)}' > tfplan.json

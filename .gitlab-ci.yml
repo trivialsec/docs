@@ -15,9 +15,8 @@ stages:
 # Production
 #################
 
-vite build (prod):
+mkdocs build (prod):
   variables:
-    NODE_ENV: production
     APP_ENV: Prod
     TF_VAR_app_env: Prod
   tags:
@@ -25,7 +24,7 @@ vite build (prod):
   stage: build
   script:
     - npm i
-    - make -B ci-build
+    - make -B build
   only:
     refs:
       - main
@@ -37,7 +36,6 @@ vite build (prod):
 
 terraform validate (prod):
   variables:
-    NODE_ENV: production
     APP_ENV: Prod
     TF_VAR_app_env: Prod
   stage: build
@@ -54,11 +52,10 @@ terraform validate (prod):
     refs:
       - main
   dependencies:
-    - vite build (prod)
+    - mkdocs build (prod)
 
 terraform plan (prod):
   variables:
-    NODE_ENV: production
     APP_ENV: Prod
     TF_VAR_app_env: Prod
   tags:
@@ -78,11 +75,10 @@ terraform plan (prod):
     reports:
       terraform: tfplan.json
   dependencies:
-    - vite build (prod)
+    - mkdocs build (prod)
 
 terraform apply (prod):
   variables:
-    NODE_ENV: production
     APP_ENV: Prod
     TF_VAR_app_env: Prod
   tags:
@@ -98,7 +94,7 @@ terraform apply (prod):
     url: https://sso.jumpcloud.com/saml2/aws1
     on_stop: terraform destroy (prod)
   dependencies:
-    - vite build (prod)
+    - mkdocs build (prod)
     - terraform plan (prod)
 
 terraform destroy (prod):
@@ -126,7 +122,6 @@ terraform destroy (prod):
 
 clear cdn cache (prod):
   variables:
-    NODE_ENV: production
     APP_ENV: Prod
     TF_VAR_app_env: Prod
   stage: post-deploy
@@ -142,13 +137,13 @@ clear cdn cache (prod):
 # Non-Production
 #################
 
-vite build (dev):
+mkdocs build (dev):
   tags:
     - jager
   stage: build
   script:
     - npm i
-    - make -B ci-build
+    - make -B build
   rules:
     - changes:
         - src/**/*
@@ -174,7 +169,7 @@ terraform validate (dev):
     refs:
       - merge_request
   dependencies:
-    - vite build (dev)
+    - mkdocs build (dev)
 
 terraform plan (dev):
   variables:
@@ -196,7 +191,7 @@ terraform plan (dev):
     reports:
       terraform: tfplan.json
   dependencies:
-    - vite build (dev)
+    - mkdocs build (dev)
 
 terraform apply (dev):
   variables:
@@ -214,7 +209,7 @@ terraform apply (dev):
     url: https://sso.jumpcloud.com/saml2/aws1
     on_stop: terraform destroy (dev)
   dependencies:
-    - vite build (dev)
+    - mkdocs build (dev)
     - terraform plan (dev)
 
 terraform destroy (dev):
@@ -259,7 +254,7 @@ sca npm:
     - pre-commit run license-check-npm --local-branch
       ${CI_MERGE_REQUEST_SOURCE_BRANCH_NAME:-$CI_COMMIT_BRANCH}
   dependencies:
-    - vite build (prod)
+    - mkdocs build (prod)
   rules:
     - changes:
         - package.json

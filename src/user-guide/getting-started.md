@@ -12,7 +12,7 @@ Everything you need to know about Trivial Security to get started.
 
 ## Create an account
 
-All is needed will be an arbitrary `name` that that we both can use to identify your account, use your company name or anything you like as long as it is unique we don't mind at all what you choose.
+All is needed is an `email` address and arbitrary account `name`, use your company name or anything you like as long as it is unique we don't mind at all what you choose.
 
 Also we will need an `email` address to send you the login Magic Link, we do not share your email with promoters or opt-in to send you marketing of any kind. The email is used fir Stripe payments if you upgrade, and any email alerts you turn on will go through Twilio Sendgrid. Check out the privacy policy for any more specific concerns.
 
