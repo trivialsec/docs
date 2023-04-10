@@ -38,6 +38,8 @@ nav:
   - "User Guide":
       - "Getting Started": user-guide/getting-started.md
       - "Using the Scanners": user-guide/scanners.md
+      - "Using CLI": user-guide/scanners/cli.md
+      - "Using Webhooks": user-guide/webhooks.md
   - "Evaluation Rules":
       - "1.0 TLS Negotiation":
           - "1.1 Basic Constraints Extension valid path length": rules/issue_1.1.md
