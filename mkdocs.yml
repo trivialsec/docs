@@ -143,3 +143,4 @@ nav:
           - "4.15 Upgrade Insecure Requests": rules/issue_4.15.md
           - "4.16 Safe HTML iframe options": rules/issue_4.16.md
           - "4.17 Block mode XSS-Protection": rules/issue_4.17.md
+  - "Alternatives": alternative-comparison.md
