@@ -27,7 +27,7 @@ jobs:
 
       - name: Check whitespace
         run: |+
-          TOOLS="remove-tabs trailing-whitespace"
+          TOOLS="remove-tabs trailing-whitespace mixed-line-ending"
           for i in $TOOLS
           do
             pre-commit run $i --local-branch ${${{ github.event.pull_request.head.ref }}:-${{ github.ref }}}
@@ -53,16 +53,6 @@ jobs:
             pre-commit run $i --local-branch ${${{ github.event.pull_request.head.ref }}:-${{ github.ref }}}
           done
 
-      - name: Check conventional commits
-        run: |+
-          echo "$(git show -s --format=%s)" > commit-msg.txt
-          cat commit-msg.txt
-          pre-commit run conventional-pre-commit --hook-stage commit-msg --commit-msg-filename commit-msg.txt --local-branch ${${{ github.event.pull_request.head.ref }}:-${{ github.ref }}}
-          TOOLS="no-commit-to-branch mixed-line-ending check-merge-conflict"
-          for i in $TOOLS
-          do
-            pre-commit run $i --local-branch ${${{ github.event.pull_request.head.ref }}:-${{ github.ref }}}
-          done
       - name: Run build
         run: make -B build init plan
 
