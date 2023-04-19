@@ -54,7 +54,7 @@ jobs:
           done
 
       - name: Run build
-        run: make -B build init plan
+        run: make -B build
 
   # deploy:
 
