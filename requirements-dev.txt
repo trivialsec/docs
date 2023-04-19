@@ -1,7 +1,0 @@
-pre-commit
-detect-secrets
-checkov
-semgrep
-mkdocs
-mkdocs-material
-mkdocs-material-extensions

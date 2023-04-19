@@ -27,7 +27,7 @@ help: ## This help.
 deps: ## install dependancies for development of this project; assumes `python3 -m venv .venv && source .venv/bin/activate`
 	pip install -U pip
 	pip install -U setuptools wheel
-	pip install -U -r requirements-dev.txt
+	pip install -U -r requirements.txt
 	terraform -chdir=plans -install-autocomplete || true
 	pre-commit install --hook-type pre-push --hook-type pre-commit
 	@ [ -f .secrets.baseline ] || ( detect-secrets scan > .secrets.baseline )
@@ -36,7 +36,7 @@ deps: ## install dependancies for development of this project; assumes `python3 
 ci-deps: ## install dependancies for CI
 	pip install -U pip
 	pip install -U setuptools wheel
-	pip install -U -r requirements-ci.txt
+	pip install -U -r requirements.txt
 	pre-commit autoupdate
 
 clean: ## Cleanup tmp files
