@@ -1,75 +1,79 @@
 name: Makefile CI
 
 on:
-  push:
-    branches: [ "devel" ]
   pull_request:
-    branches: [ "main" ]
+    branches: ["main"]
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v3
+      - uses: actions/checkout@v3
 
-    - name: clean
-      run: make clean
+      - name: clean
+        run: make clean
 
-    - name: Install dependencies
-      run: make ci-deps
+      - name: Install dependencies
+        run: make ci-deps
 
-    - name: Run terraform checks
-      run: |+
-        TOOLS="terraform_checkov terraform_validate"
-        for i in $TOOLS
-        do
-          pre-commit run $i --local-branch ${${{ github.event.pull_request.head.ref }}:-${{ github.ref }}}
-        done
+      - name: Run terraform checks
+        run: |+
+          TOOLS="terraform_checkov terraform_validate"
+          for i in $TOOLS
+          do
+            pre-commit run $i --local-branch ${${{ github.event.pull_request.head.ref }}:-${{ github.ref }}}
+          done
 
-    - name: Check whitespace
-      run: |+
-        TOOLS="remove-tabs trailing-whitespace"
-        for i in $TOOLS
-        do
-          pre-commit run $i --local-branch ${${{ github.event.pull_request.head.ref }}:-${{ github.ref }}}
-        done
+      - name: Check whitespace
+        run: |+
+          TOOLS="remove-tabs trailing-whitespace"
+          for i in $TOOLS
+          do
+            pre-commit run $i --local-branch ${${{ github.event.pull_request.head.ref }}:-${{ github.ref }}}
+          done
 
-    - name: Run sca checks
-      run: |+
-        pre-commit run license-check-npm --local-branch ${${{ github.event.pull_request.head.ref }}:-${{ github.ref }}}
+      - name: Run sca checks
+        run: |+
+          pre-commit run license-check-npm --local-branch ${${{ github.event.pull_request.head.ref }}:-${{ github.ref }}}
 
-    - name: Run linting checks
-      run: |+
-        TOOLS="prettier typos check-json check-yaml"
-        for i in $TOOLS
-        do
-          pre-commit run $i --local-branch ${${{ github.event.pull_request.head.ref }}:-${{ github.ref }}}
-        done
+      - name: Run linting checks
+        run: |+
+          TOOLS="prettier typos check-json check-yaml"
+          for i in $TOOLS
+          do
+            pre-commit run $i --local-branch ${${{ github.event.pull_request.head.ref }}:-${{ github.ref }}}
+          done
 
-    - name: Run secrets scanning
-      run: |+
-        TOOLS="detect-private-key detect-secrets"
-        for i in $TOOLS
-        do
-          pre-commit run $i --local-branch ${${{ github.event.pull_request.head.ref }}:-${{ github.ref }}}
-        done
+      - name: Run secrets scanning
+        run: |+
+          TOOLS="detect-private-key detect-secrets"
+          for i in $TOOLS
+          do
+            pre-commit run $i --local-branch ${${{ github.event.pull_request.head.ref }}:-${{ github.ref }}}
+          done
 
-    - name: Check conventional commits
-      run: |+
-        echo $CI_COMMIT_MESSAGE > commit-msg.txt
-        pre-commit run conventional-pre-commit --hook-stage commit-msg --commit-msg-filename commit-msg.txt --local-branch ${${{ github.event.pull_request.head.ref }}:-${{ github.ref }}}
-        TOOLS="no-commit-to-branch mixed-line-ending check-merge-conflict"
-        for i in $TOOLS
-        do
-          pre-commit run $i --local-branch ${${{ github.event.pull_request.head.ref }}:-${{ github.ref }}}
-        done
-    - name: Run build
-      run: make -B build init plan
+      - name: Check conventional commits
+        run: |+
+          echo $CI_COMMIT_MESSAGE > commit-msg.txt
+          pre-commit run conventional-pre-commit --hook-stage commit-msg --commit-msg-filename commit-msg.txt --local-branch ${${{ github.event.pull_request.head.ref }}:-${{ github.ref }}}
+          TOOLS="no-commit-to-branch mixed-line-ending check-merge-conflict"
+          for i in $TOOLS
+          do
+            pre-commit run $i --local-branch ${${{ github.event.pull_request.head.ref }}:-${{ github.ref }}}
+          done
+      - name: Run build
+        run: make -B build init plan
 
-    - name: Run integration
-      run: make apply
+  # deploy:
 
-    - name: clear CDN cache
-      run: make clear-cf
+  #   runs-on: ubuntu-latest
+
+  #   steps:
+  #   - uses: actions/checkout@v3
+
+  #   - name: Integration
+  #     run: make apply
+
+  #   - name: clear CDN cache
+  #     run: make clear-cf

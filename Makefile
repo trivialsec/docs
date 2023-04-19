@@ -33,6 +33,12 @@ deps: ## install dependancies for development of this project; assumes `python3 
 	@ [ -f .secrets.baseline ] || ( detect-secrets scan > .secrets.baseline )
 	detect-secrets audit .secrets.baseline
 
+ci-deps: ## install dependancies for CI
+	pip install -U pip
+	pip install -U setuptools wheel
+	pip install -U -r requirements-ci.txt
+	pre-commit autoupdate
+
 clean: ## Cleanup tmp files
 	@find . -type f -name '*.DS_Store' -delete 2>/dev/null
 	@rm -f **/*.zip **/*.tar **/*.tgz **/*.gz
@@ -48,6 +54,7 @@ env:
 init: ## Runs tf init tf
 	@echo -e $(bold)$(primary)APP_ENV$(clear) = $(APP_ENV)
 	terraform -chdir=plans init -backend-config=${APP_ENV}-backend.conf -reconfigure -upgrade=true
+	pre-commit validate-config
 
 refresh: ## Runs tf refresh
 	terraform -chdir=plans refresh
