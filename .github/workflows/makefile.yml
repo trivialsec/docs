@@ -55,7 +55,7 @@ jobs:
 
       - name: Check conventional commits
         run: |+
-          echo $CI_COMMIT_MESSAGE > commit-msg.txt
+          echo ${{ github.event.head_commit.message }} > commit-msg.txt
           pre-commit run conventional-pre-commit --hook-stage commit-msg --commit-msg-filename commit-msg.txt --local-branch ${${{ github.event.pull_request.head.ref }}:-${{ github.ref }}}
           TOOLS="no-commit-to-branch mixed-line-ending check-merge-conflict"
           for i in $TOOLS
