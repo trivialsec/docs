@@ -41,7 +41,7 @@ ci-deps: ## install dependancies for CI
 	pip install -U setuptools wheel
 	pip install -U -r requirements.txt
 	pre-commit autoupdate
- git add .pre-commit-config.yaml
+        git add .pre-commit-config.yaml
 
 clean: ## Cleanup tmp files
 	@find . -type f -name '*.DS_Store' -delete 2>/dev/null
