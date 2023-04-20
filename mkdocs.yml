@@ -7,7 +7,7 @@ repo_name: GitHub
 docs_dir: src
 site_dir: dist
 use_directory_urls: false
-strict: true
+strict: false
 copyright: Copyright &copy; Trivial Security
 markdown_extensions:
   - pymdownx.emoji
@@ -144,3 +144,5 @@ nav:
           - "4.16 Safe HTML iframe options": rules/issue_4.16.md
           - "4.17 Block mode XSS-Protection": rules/issue_4.17.md
   - "Alternatives": alternative-comparison.md
+  - "Threat Models":
+      - "Bearer JWT": bearer_jwt-bearerjwt.md

@@ -24,6 +24,9 @@ help: ## This help.
 
 .DEFAULT_GOAL := help
 
+hcltminstall:
+	wget -qO- https://github.com/xntrik/hcltm/releases/download/v0.1.6/hcltm-linux-amd64.tar.gz | tar xvz -C /usr/local/bin/hcltm
+
 deps: ## install dependancies for development of this project; assumes `python3 -m venv .venv && source .venv/bin/activate`
 	pip install -U pip
 	pip install -U setuptools wheel
@@ -69,6 +72,9 @@ apply: ## tf apply -auto-approve -refresh=true
 	terraform -chdir=plans apply -auto-approve -refresh=true .tfplan
 
 build: ## mkdocs build
+	hcltm dashboard -outdir=src -overwrite threatmodels
+	@rm src/dashboard.md
+	@markdownlint -q --fix src || true
 	mkdocs build
 	cp src/img/favicon.png dist/assets/images/favicon.png
 
