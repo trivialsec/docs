@@ -38,7 +38,7 @@ Here are the steps to use the CLI:
 
 ### Installation
 
-TrivialScan can be installed using `pip` the package installer for Python, or the preferred `pipx` that creates an isolated environment for each package.
+Trivial Scanner can be installed using `pip` the package installer for Python, or the preferred `pipx` that creates an isolated environment for each package.
 
 1. Open a terminal or command prompt and enter the following command `pipx install trivialscan`
 
@@ -53,18 +53,6 @@ TrivialScan can be installed using `pip` the package installer for Python, or th
 Once you have created and configured the `yaml` file, you can run a scan by entering the following command; `trivial scan`.
 
 For full argument details, custom rules, and the extensive configuration options, see the dedicated [CLI Scanner page](./scanners/cli.md).
-
-## Webhooks
-
-Webhooks are a way for TrivialScan to notify other systems about scan events and results. When an event occurs, such as a scan completion or new finding, TrivialScan can send a HTTP POST request to a pre-configured URL (webhook). This can trigger actions such as creating a ticket in a help desk system or sending a notification to a team's chat channel.
-
-Here are the steps to use webhooks:
-
-1. **Configure the webhook:** To configure a webhook, you need to specify the URL that Trivial Security should send the HTTP POST request to when an event occurs. This can be done in the Dashboard under the Account Settings.
-2. **Securely store the secret key:** To ensure that the webhook requests are coming from Trivial Security and not an attacker, you should perform signature verification. This involves adding a client token (secret key) to your application and using it to sign each webhook request. To see how you can generate a client token check out [Getting Started](./getting-started.md).
-3. **Handle the webhook request:** When a webhook is triggered, Trivial Security sends a HTTP POST request to the configured URL with a JSON payload containing details about the event. The receiving system must be configured to handle these requests and parse the JSON payload. The application must also verify the signature using the client token (secret key). The signature is sent in the `Authorization` HTTP header, in the `mac` claim. The algorithm is always **SHA512** regardless what has been specified in the `alg` claim (if it is not SHA512 assume there was a malicious actor in the middle and the payload is compromised).
-
-For full implementation details see the dedicated [webhooks page](./webhooks.md).
 
 ## HTTP API
 

@@ -1,4 +1,14 @@
+---
+title: Alternatives and Comparisons to Trivial Security
+summary: While Trivial Security is more than a web scanner, here are the alternative web scanning options
+authors:
+  - Chris Langton
+date: 2023-04-19
+---
+
 # Alternatives and Comparisons
+
+While Trivial Security is more than a web scanner, here are the alternative web scanning options:
 
 ## SSL Certificate Examination by dnschecker.org
 

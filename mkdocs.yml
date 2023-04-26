@@ -39,7 +39,27 @@ nav:
       - "Getting Started": user-guide/getting-started.md
       - "Using the Scanners": user-guide/scanners.md
       - "Using CLI": user-guide/scanners/cli.md
-      - "Using Webhooks": user-guide/webhooks.md
+      - "Webhooks":
+          - "What are webhooks?": user-guide/webhooks/getting-started.md
+          - "Python Example": user-guide/webhooks/python.md
+          - "Node.js Example": user-guide/webhooks/nodejs.md
+          - "Go Example": user-guide/webhooks/golang.md
+          - "Event Sources":
+              - "hosted_monitoring": user-guide/webhooks/event/hosted_monitoring.md
+              - "hosted_scanner": user-guide/webhooks/event/hosted_scanner.md
+              - "self_hosted_uploads": user-guide/webhooks/event/self_hosted_uploads.md
+              - "early_warning_email": user-guide/webhooks/event/early_warning_email.md
+              - "early_warning_domain": user-guide/webhooks/event/early_warning_domain.md
+              - "early_warning_ip": user-guide/webhooks/event/early_warning_ip.md
+              - "new_findings_certificates": user-guide/webhooks/event/new_findings_certificates.md
+              - "new_findings_domains": user-guide/webhooks/event/new_findings_domains.md
+              - "client_status": user-guide/webhooks/event/client_status.md
+              - "client_activity": user-guide/webhooks/event/client_activity.md
+              - "scanner_configurations": user-guide/webhooks/event/scanner_configurations.md
+              - "report_created": user-guide/webhooks/event/report_created.md
+              - "report_deleted": user-guide/webhooks/event/report_deleted.md
+              - "account_activity": user-guide/webhooks/event/account_activity.md
+              - "member_activity": user-guide/webhooks/event/member_activity.md
   - "Evaluation Rules":
       - "1.0 TLS Negotiation":
           - "1.1 Basic Constraints Extension valid path length": rules/issue_1.1.md

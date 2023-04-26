@@ -54,7 +54,7 @@ jobs:
           done
 
       - name: Run build
-        run: make -B build
+        run: make -B build-ci
 
   # deploy:
 

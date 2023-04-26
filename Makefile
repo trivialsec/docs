@@ -72,10 +72,13 @@ apply: ## tf apply -auto-approve -refresh=true
 	terraform -chdir=plans apply -auto-approve -refresh=true .tfplan
 
 build: ## mkdocs build
+	mkdocs build --strict --clean
+
+build-ci: ## mkdocs build
 	hcltm dashboard -outdir=src -overwrite threatmodels
 	@rm src/dashboard.md
 	@markdownlint -q --fix src || true
-	mkdocs build
+	mkdocs build --strict --clean --verbose
 	cp src/img/favicon.png dist/assets/images/favicon.png
 
 destroy:  ## tf destroy -auto-approve

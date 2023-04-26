@@ -124,13 +124,56 @@ threatmodel "Bearer JWT" {
   }
 
   usecase {
-    description = "Protect customer data"
+    description =  <<EOT
+**Opaque Bearer token as a short lived reference**
+
+Trivial Security has made intentional design choices to restrict the JWT for the use case of; _Reference tokens_ (sometimes also called _opaque tokens_).
+The following claims are issued and validated on each evaluation; `nbf`, `iat`, `exp`, `iss`, `aud`, `sub`, and the header `kid` is used to correlate with the token service.
+
+A nice feature of reference tokens is that you have much more control over their lifetime. The downside of reference tokens is having a back-channel communication from resource server to token service (not a stateless server) which is not a design goal for Trivial Security.
+
+This allows for scenarios like; revoking the token in an “emergency” case (users can have emergency also; lost phone, phishing attack etc.), and invalidate tokens at user logout time or app uninstall.
+
+Simply holding the token does not permit it's use on other devices, on the same device outside the context which is was issued, or beyond the short time frames within the permitted browser and device context.
+If either client or server has any reason to distrust any token issued for any reason, they are revocable by either which is an immediate global effect, and due to the `kid` and each token having it's own unique signing secret there can be more than 1 token issued per user simultaneously.
+EOT
   }
 
   exclusion {
-    description = "registration"
+    description =  <<EOT
+**Authz Insecure Direct Object Reference (IDOR)**
+
+The only custom claim signed in the JWT is `acc` for our MemberAccount unique human readable name.
+It is only read after all validation and verification steps are complete, and it's a non-authoritative
+circuit breaker intended to detect issues with data and not provide Authz controls
+EOT
+  }
+  exclusion {
+    description =  <<EOT
+**JWT validation on client-side devices**
+
+Using symmetric signing keys, the client would be required to hold the shared secret to verify the
+signature and use the JWT.
+Sharing this symmetric key with a client breaks the server-side assurance that the JWT provided.
+If new custom claim data is needed for a client device to read, it has to read it from the JWT without
+doing signature verification (not recommended) and the values should be considered malicious i.e. XSS.
+EOT
   }
 
+  exclusion {
+    description =  <<EOT
+**Bearer token as an access token**
+
+> A client-side token is a bearer token.
+
+If it becomes compromised, it can be used without restrictions by whoever possesses it. Not having a short lifetime or revocation mechanism in place makes such a scenario extremely vulnerable.
+Protocols like OAuth2 and therefore OIDC apply the self-contained token strategy; The recipient of a self-contained token can verify the token signature and validate claims because it has the asymmetric key material (embedded in the JWT) and often referred to as a stateless client-side.
+The weakness here is the client has the key material and must apply sensitive data controls, and the issuing server must have abuse monitoring and enforce very short token expiry (5 to 10 minutes), the short lifetime prevents the window of abuse in case an access token is stolen.
+
+The implementation and documentation of Trivial Security will reference the JWT as a Bearer token, when transmitted over the `Authorization` header specifically.
+However this is merely convention, to provide a documentation-as-code that will have linkage to JWT libraries and blog post.
+EOT
+  }
 
   data_flow_diagram_v2 "Magic Link" {
     process "OpenAPI" {
