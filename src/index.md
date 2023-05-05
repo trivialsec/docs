@@ -10,6 +10,8 @@ date: 2023-04-07
 
 Everything you need to know about what Trivial Security provides you.
 
+> Looking for our status page? [Check here](https://trivialsec.statuspage.io/)
+
 ## What is Trivial Security
 
 Trivial Security is a managed service for the Open Source [Trivial Scanner](https://github.com/trivialsec/trivialscan), a web application security scanner that enables you to scan websites, web applications, and API services, to identify security flaws. Trivial Scanner can scan all types of web-based targets regardless of the hosting platform or the programming language with which they are built.
