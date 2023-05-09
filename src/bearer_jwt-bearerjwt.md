@@ -12,7 +12,7 @@ See more: <https://docs.trivialsec.com>
 
 ![Diagram](bearer_jwt-bearerjwtauthn.png "Diagram")
 
-|                 |        |
+| Attributes      |        |
 | --------------- | ------ |
 | Internet Facing | ✅     |
 | New Initiative  | ✅     |
@@ -89,13 +89,15 @@ Impacted Information Assets:
 
 > Implemented: ✅
 
-Access tokens should not be able to be used on any other device than the fingerprinted device at time of Authn
+Access tokens should not be able to be used on any other device than the fingerprinted device at time of Authn.
+
+See [access token reuse](#access-token-reuse) for a longer use case and example that incorporates this control into it's scenario.
 
 _Implementation Notes_
 
 kid is a sha224 that incorporates end-user fingerprinting and internal primary key
 
-|                |        |
+| Attributes     |        |
 | -------------- | ------ |
 | Risk Reduction | 50     |
 | HashAlgo       | sha224 |
@@ -106,8 +108,10 @@ kid is a sha224 that incorporates end-user fingerprinting and internal primary k
 
 This is theoretically a stronger Bearer JWT implementation and may provide stronger assurance
 
-|     |     |
-| --- | --- |
+| Attributes     |                                                            |
+| -------------- | ---------------------------------------------------------- |
+| Risk Reduction | 10                                                         |
+| Roadmap        | Not being tracked, control has been validated as effective |
 
 ### Threat
 
@@ -127,15 +131,30 @@ Impacted Information Assets:
 
 > Implemented: ✅
 
-Access tokens should not be able to be used outside the context of the client/browser fingerprinted at time of Authn
+Access tokens should not be able to be used outside the context of the client/browser fingerprinted at time of Authn.
+A session token never leaves the server, and each request is default treat unauthenticated until the server can derive what the session token is and verify it's status from the credential store state.
+
+Below is an example of an attacker using a stolen JWT, which is not expired, revoked, modified, or considered invalid in any other way from the client side:
+![Stolen JWT denied](./img/stolen-session.png)
+As shown, the server compared session tokens and denied the request.
+
+Both session tokens were derived on the server, neither was provided by the client.
+The client merely provided the `kid` claim that us used to lookup the stored session, which is not considered to be the session for this request yet..
+
+The first session token is stored with the session data on the server and never sent to the client.
+The second session token is derived on the server at the time of request independent of the stored session using nothing provided by the JWT, the JWT is merely there is ensure the authenticated legitimate client knows it's `kid`, and if it sends it back we trust it due to the symmetric signature integrity verification utilising a symmetric key that never left the server.
+
+If the JWT was stolen and a malicious actor attempted to use it outside the context of the client, even if the JWT is integrity check the session token will never match.
+If the malicious actor attempts to use the JWT in the same context as the client (the session token matches) the JWT can not be tampered with to modify the `kid` because other `kid` values will not match their correlated session tokens to this client context.
+If a malicious actor managed to gain access to the symmetric key for signing a JWT for a client, there is no other claims in the JWT that the application uses.
 
 _Implementation Notes_
 
-kid is a sha224 that incorporates client fingerprinting and internal primary key
+kid is a reproducible (on server) hash that incorporates client fingerprinting and internal primary key
 
-|                |        |
+| Attributes     |        |
 | -------------- | ------ |
-| Risk Reduction | 50     |
+| Risk Reduction | 25     |
 | HashAlgo       | sha224 |
 
 ##### Retrieve browser fingerprint via websocket
@@ -144,8 +163,10 @@ kid is a sha224 that incorporates client fingerprinting and internal primary key
 
 Theoretically an asynchronous socket can gather a wide range of browser identifiers to be incorporated in a fingerprint for the session during Authn
 
-|     |     |
-| --- | --- |
+| Attributes     |                                                            |
+| -------------- | ---------------------------------------------------------- |
+| Risk Reduction | 10                                                         |
+| Roadmap        | Not being tracked, control has been validated as effective |
 
 ### Threat
 
@@ -171,19 +192,24 @@ _Implementation Notes_
 
 symmetric key for signature validation never leaves the context of the server, all tokens (Authorization header and cookie) are validated
 
-|                |       |
+| Attributes     |       |
 | -------------- | ----- |
 | Risk Reduction | 50    |
 | SignatureAlgo  | HS256 |
 
 ##### Non-repudiation
 
-> Implemented: ❌
+> Implemented: ✅
 
 Log all Authentication attempts, include all possible client indicators and fingerprints
 
-|     |     |
-| --- | --- |
+_Implementation Notes_
+
+See [access token reuse](#access-token-reuse) for an example that incorporates this control into it's scenario.
+
+| Attributes     |     |
+| -------------- | --- |
+| Risk Reduction | 100 |
 
 ### Threat
 
@@ -210,7 +236,7 @@ _Implementation Notes_
 
 symmetric key for signature validation will rotate with each new session, last for 24h, and if revoked in the credential store the user is logged out and must re-Authn
 
-|                |     |
+| Attributes     |     |
 | -------------- | --- |
 | Risk Reduction | 50  |
 
@@ -224,9 +250,9 @@ _Implementation Notes_
 
 If sessions are revoked in the credential store, or by the user in the Security page, the user is logged out and must re-Authn
 
-|                |     |
+| Attributes     |     |
 | -------------- | --- |
-| Risk Reduction | 50  |
+| Risk Reduction | 25  |
 
 ##### Forced re-Authn
 
@@ -234,8 +260,10 @@ If sessions are revoked in the credential store, or by the user in the Security 
 
 Instead of users being logged out and redirected to the homepage, an re-Authentication UX should be shown
 
-|     |     |
-| --- | --- |
+| Attributes     |                       |
+| -------------- | --------------------- |
+| Risk Reduction | 10                    |
+| Roadmap        | In progress; designed |
 
 ## Third Party Dependencies
 

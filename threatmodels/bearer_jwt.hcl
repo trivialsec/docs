@@ -41,7 +41,11 @@ threatmodel "Bearer JWT" {
     information_asset_refs = ["Customer data"]
 
     expanded_control "Stolen access tokens" {
-      description = "Access tokens should not be able to be used on any other device than the fingerprinted device at time of Authn"
+      description = <<EOT
+Access tokens should not be able to be used on any other device than the fingerprinted device at time of Authn.
+
+See [access token reuse](#access-token-reuse) for a longer use case and example that incorporates this control into it's scenario.
+EOT
       implemented = true
       implementation_notes = "kid is a sha224 that incorporates end-user fingerprinting and internal primary key"
       risk_reduction = 50
@@ -53,6 +57,10 @@ threatmodel "Bearer JWT" {
     expanded_control "Asymmetric signature with Certificate based public key exchange" {
       description = "This is theoretically a stronger Bearer JWT implementation and may provide stronger assurance"
       implemented = false
+      risk_reduction = 10
+      attribute "Roadmap" {
+        value = "Not being tracked, control has been validated as effective"
+      }
     }
   }
   threat {
@@ -62,10 +70,27 @@ threatmodel "Bearer JWT" {
     information_asset_refs = ["Customer data"]
 
     expanded_control "Access token reuse" {
-      description = "Access tokens should not be able to be used outside the context of the client/browser fingerprinted at time of Authn"
+      description = <<EOT
+Access tokens should not be able to be used outside the context of the client/browser fingerprinted at time of Authn.
+A session token never leaves the server, and each request is default treat unauthenticated until the server can derive what the session token is and verify it's status from the credential store state.
+
+Below is an example of an attacker using a stolen JWT, which is not expired, revoked, modified, or considered invalid in any other way from the client side:
+![Stolen JWT denied](./img/stolen-session.png)
+As shown, the server compared session tokens and denied the request.
+
+Both session tokens were derived on the server, neither was provided by the client.
+The client merely provided the `kid` claim that us used to lookup the stored session, which is not considered to be the session for this request yet..
+
+The first session token is stored with the session data on the server and never sent to the client.
+The second session token is derived on the server at the time of request independent of the stored session using nothing provided by the JWT, the JWT is merely there is ensure the authenticated legitimate client knows it's `kid`, and if it sends it back we trust it due to the symmetric signature integrity verification utilising a symmetric key that never left the server.
+
+If the JWT was stolen and a malicious actor attempted to use it outside the context of the client, even if the JWT is integrity check the session token will never match.
+If the malicious actor attempts to use the JWT in the same context as the client (the session token matches) the JWT can not be tampered with to modify the `kid` because other `kid` values will not match their correlated session tokens to this client context.
+If a malicious actor managed to gain access to the symmetric key for signing a JWT for a client, there is no other claims in the JWT that the application uses.
+EOT
       implemented = true
-      implementation_notes = "kid is a sha224 that incorporates client fingerprinting and internal primary key"
-      risk_reduction = 50
+      implementation_notes = "kid is a reproducable (on server) hash that incorporates client fingerprinting and internal primary key"
+      risk_reduction = 25
       attribute "HashAlgo" {
         value = "sha224"
       }
@@ -74,6 +99,10 @@ threatmodel "Bearer JWT" {
     expanded_control "Retrieve browser fingerprint via websocket" {
       description = "Theoretically an asynchronous socket can gather a wide range of browser identifiers to be incorporated in a fingerprint for the session during Authn"
       implemented = false
+      risk_reduction = 10
+      attribute "Roadmap" {
+        value = "Not being tracked, control has been validated as effective"
+      }
     }
   }
   threat {
@@ -94,7 +123,9 @@ threatmodel "Bearer JWT" {
 
     expanded_control "Non-repudiation" {
       description = "Log all Authentication attempts, include all possible client indicators and fingerprints"
-      implemented = false
+      implemented = true
+      implementation_notes = "See [access token reuse](#access-token-reuse) for an example that incorporates this control into it's scenario."
+      risk_reduction = 100
     }
   }
   threat {
@@ -114,17 +145,21 @@ threatmodel "Bearer JWT" {
       description = "A secret should be revocable so the user should be required to re-Authn"
       implemented = true
       implementation_notes = "If sessions are revoked in the credential store, or by the user in the Security page, the user is logged out and must re-Authn"
-      risk_reduction = 50
+      risk_reduction = 25
     }
 
     expanded_control "Forced re-Authn" {
       description = "Instead of users being logged out and redirected to the homepage, an re-Authentication UX should be shown"
       implemented = false
+      risk_reduction = 10
+      attribute "Roadmap" {
+        value = "In progress; designed"
+      }
     }
   }
 
   usecase {
-    description =  <<EOT
+    description = <<EOT
 **Opaque Bearer token as a short lived reference**
 
 Trivial Security has made intentional design choices to restrict the JWT for the use case of; _Reference tokens_ (sometimes also called _opaque tokens_).

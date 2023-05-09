@@ -79,6 +79,7 @@ build-ci: ## mkdocs build
 	hcltm dashboard -outdir=src -overwrite threatmodels
 	@rm src/dashboard.md
 	@markdownlint -q --fix src || true
+	@sed -i 's/|    |    |/| Attributes  |    |/g' src/*.md
 	mkdocs build --strict --clean --verbose
 	cp src/img/favicon.png dist/assets/images/favicon.png
 
