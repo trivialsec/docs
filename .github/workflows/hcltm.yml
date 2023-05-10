@@ -1,0 +1,18 @@
+name: hcltm
+
+on:
+  pull_request:
+    branches: ["main"]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: hcltm validate
+        uses: xntrik/hcltm-action@latest
+        with:
+          command: validate
+          files: "./threatmodels/*"
