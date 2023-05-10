@@ -1,6 +1,7 @@
 # <img src=".repo/assets/icon-512x512.png"  width="52" height="52"> Trivial Security User Documentation
 
-[![pipeline status](https://gitlab.com/trivialsec/docs/badges/main/pipeline.svg)](https://gitlab.com/trivialsec/docs/commits/main)
+![Build](https://github.com/trivialsec/docs/actions/workflows/pipeline.yml/badge.svg)
+![Tests](https://github.com/trivialsec/docs/actions/workflows/pre-commit.yml/badge.svg)
 
 # Using this repo
 
