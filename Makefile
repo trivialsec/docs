@@ -42,10 +42,9 @@ ci-deps: ## install dependancies for CI
 	pip install -U -r requirements.txt
 	pre-commit autoupdate
 	git add .pre-commit-config.yaml
-	sudo mkdir -p /home/runner/.local/bin
-	sudo chown -R runner:runner /home/runner/.local/bin
-	wget -qO- https://github.com/xntrik/hcltm/releases/download/v0.1.6/hcltm-linux-amd64.tar.gz | sudo tar xvz -C /home/runner/.local/bin/hcltm
-	sudo chown runner:runner /home/runner/.local/bin/hcltm
+	wget -qO- https://github.com/xntrik/hcltm/releases/download/v0.1.6/hcltm-linux-amd64.tar.gz | tar xvz -C ./hcltm
+	sudo chown runner:runner ./hcltm
+	sudo chmod a+x ./hcltm
 
 clean: ## Cleanup tmp files
 	@find . -type f -name '*.DS_Store' -delete 2>/dev/null
@@ -80,7 +79,7 @@ build: ## mkdocs build
 	mkdocs build --strict --clean
 
 build-ci: ## mkdocs build
-	hcltm dashboard -outdir=src -overwrite threatmodels
+	./hcltm dashboard -outdir=src -overwrite threatmodels
 	@rm src/dashboard.md
 	@markdownlint -q --fix src || true
 	@sed -i 's/|    |    |/| Attributes  |    |/g' src/*.md
