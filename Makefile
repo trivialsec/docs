@@ -42,6 +42,8 @@ ci-deps: ## install dependancies for CI
 	pip install -U -r requirements.txt
 	pre-commit autoupdate
 	git add .pre-commit-config.yaml
+	sudo mkdir -p /home/runner/.local/bin
+	sudo chown -R runner:runner /home/runner/.local/bin
 	wget -qO- https://github.com/xntrik/hcltm/releases/download/v0.1.6/hcltm-linux-amd64.tar.gz | tar xvz -C /home/runner/.local/bin/hcltm
 	sudo chown runner:runner /home/runner/.local/bin/hcltm
 
