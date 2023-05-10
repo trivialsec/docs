@@ -75,11 +75,14 @@ plan:  ## Runs tf validate and tf plan
 apply: ## tf apply -auto-approve -refresh=true
 	terraform -chdir=plans apply -auto-approve -refresh=true .tfplan
 
-build: ## mkdocs build
+build: ## hcltm build then mkdocs build
+	hcltm dashboard -outdir=src -overwrite threatmodels
+	@rm src/dashboard.md
+	@markdownlint -q --fix src || true
+	@sed -i 's/|    |    |/| Attributes  |    |/g' src/*.md
 	mkdocs build --strict --clean
 
 build-ci: ## mkdocs build
-	./hcltm dashboard -outdir=src -overwrite threatmodels
 	@rm src/dashboard.md
 	@markdownlint -q --fix src || true
 	@sed -i 's/|    |    |/| Attributes  |    |/g' src/*.md
