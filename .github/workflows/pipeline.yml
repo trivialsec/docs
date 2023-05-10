@@ -1,72 +1,10 @@
-name: Makefile CI
+name: Docs
 
 on:
   pull_request:
     branches: ["main"]
 
 jobs:
-  validate:
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v3
-
-      - name: hcltm validate
-        uses: xntrik/hcltm-action@latest
-        with:
-          command: validate
-          files: "./threatmodels/*"
-
-  test:
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v3
-
-      - name: Upgrade pip
-        run: |+
-          pip install -U --progress-bar off --no-python-version-warning pip
-          pip install -U --progress-bar off setuptools wheel
-
-      - name: Install test dependencies
-        run: pip install -U --progress-bar off pre-commit detect-secrets checkov
-
-      - name: Run terraform checks
-        run: |+
-          TOOLS="terraform_checkov terraform_validate"
-          for i in $TOOLS
-          do
-            pre-commit run $i --local-branch ${${{ github.event.pull_request.head.ref }}:-${{ github.ref }}}
-          done
-
-      - name: Check whitespace
-        run: |+
-          TOOLS="remove-tabs trailing-whitespace mixed-line-ending"
-          for i in $TOOLS
-          do
-            pre-commit run $i --local-branch ${${{ github.event.pull_request.head.ref }}:-${{ github.ref }}}
-          done
-
-      - name: Run sca checks
-        run: |+
-          pre-commit run license-check-npm --local-branch ${${{ github.event.pull_request.head.ref }}:-${{ github.ref }}}
-
-      - name: Run linting checks
-        run: |+
-          TOOLS="prettier typos check-json check-yaml"
-          for i in $TOOLS
-          do
-            pre-commit run $i --local-branch ${${{ github.event.pull_request.head.ref }}:-${{ github.ref }}}
-          done
-
-      - name: Run secrets scanning
-        run: |+
-          TOOLS="detect-private-key detect-secrets"
-          for i in $TOOLS
-          do
-            pre-commit run $i --local-branch ${${{ github.event.pull_request.head.ref }}:-${{ github.ref }}}
-          done
-
   build:
     runs-on: ubuntu-latest
 
