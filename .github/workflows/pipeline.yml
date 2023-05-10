@@ -36,6 +36,7 @@ jobs:
         run: |+
           rm src/dashboard.md
           pre-commit run --verbose prettier --files src/*.md || true
-          sed -i 's/|    |    |/| Attributes  |    |/g' src/*.md
+          sed -i 's/|                 |/| Context         |/g' src/*.md
+          sed -i 's/|                |/| Attributes     |/g' src/*.md
           mkdocs build --strict --clean --verbose
           cp src/img/favicon.png dist/assets/images/favicon.png

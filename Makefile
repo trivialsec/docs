@@ -75,16 +75,11 @@ apply: ## tf apply -auto-approve -refresh=true
 build: ## hcltm build then mkdocs build
 	hcltm dashboard -outdir=src -overwrite threatmodels
 	@rm src/dashboard.md
-	@markdownlint -q --fix src || true
-	@sed -i 's/|    |    |/| Attributes  |    |/g' src/*.md
+	@pre-commit run prettier --files src/*.md || true
+	@sed -i 's/|                 |/| Context         |/g' src/*.md
+	@sed -i 's/|                |/| Attributes     |/g' src/*.md
 	mkdocs build --strict --clean
-
-build-ci: ## mkdocs build
-	@rm src/dashboard.md
-	@markdownlint -q --fix src || true
-	@sed -i 's/|    |    |/| Attributes  |    |/g' src/*.md
-	mkdocs build --strict --clean --verbose
-	cp src/img/favicon.png dist/assets/images/favicon.png
+	@cp src/img/favicon.png dist/assets/images/favicon.png
 
 destroy:  ## tf destroy -auto-approve
 	terraform -chdir=plans validate

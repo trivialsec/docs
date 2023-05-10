@@ -165,4 +165,4 @@ nav:
           - "4.17 Block mode XSS-Protection": rules/issue_4.17.md
   - "Alternatives": alternative-comparison.md
   - "Threat Models":
-      - "Bearer JWT": bearer_jwt-bearerjwt.md
+      - "Bearer JWT": Bearer JWT-bearerjwt.md
