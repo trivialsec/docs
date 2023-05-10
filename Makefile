@@ -42,8 +42,9 @@ ci-deps: ## install dependancies for CI
 	pip install -U -r requirements.txt
 	pre-commit autoupdate
 	git add .pre-commit-config.yaml
-	wget -qO- https://github.com/xntrik/hcltm/releases/download/v0.1.6/hcltm-linux-amd64.tar.gz | tar xvz -C /usr/local/bin/hcltm
-	chown runner:runner /usr/local/bin/hcltm || true
+	@$(shell echo "${PATH}")
+	wget -qO- https://github.com/xntrik/hcltm/releases/download/v0.1.6/hcltm-linux-amd64.tar.gz | sudo tar xvz -C /usr/local/bin/hcltm
+	sudo chown runner:runner /usr/local/bin/hcltm
 
 clean: ## Cleanup tmp files
 	@find . -type f -name '*.DS_Store' -delete 2>/dev/null
