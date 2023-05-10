@@ -75,7 +75,7 @@ venv.bak/
 **/.terraform/
 **/.terraform*
 **/.tf*
-**/*.hcl
+plans/**/*.hcl
 **/terraform.*
 tf*.json
 .lh/

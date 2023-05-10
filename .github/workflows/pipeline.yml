@@ -1,0 +1,35 @@
+name: Docs
+
+on:
+  pull_request:
+    branches: ["main"]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Upgrade pip
+        run: |+
+          pip install -U --progress-bar off --no-python-version-warning pip
+          pip install -U --progress-bar off setuptools wheel
+
+      - name: Install build dependencies
+        run: pip install -U --progress-bar off mkdocs mkdocs-material mkdocs-material-extensions
+
+      - name: hcltm build
+        uses: xntrik/hcltm-action@latest
+        with:
+          command: dashboard
+          files: "./threatmodels/*"
+          outdir: "./src"
+
+      - name: mkdocs build
+        run: |+
+          rm src/dashboard.md
+          pre-commit run --verbose prettier --files src/*.md || true
+          sed -i 's/|    |    |/| Attributes  |    |/g' src/*.md
+          mkdocs build --strict --clean --verbose
+          cp src/img/favicon.png dist/assets/images/favicon.png
