@@ -1,0 +1,80 @@
+name: Makefile CI
+
+on:
+  pull_request:
+    branches: ["main"]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: hcltm validate
+        uses: xntrik/hcltm-action@latest
+        with:
+          command: validate
+          files: "./threatmodels/*"
+
+      - name: Install dependencies
+        run: make ci-deps
+
+      - name: Run terraform checks
+        run: |+
+          TOOLS="terraform_checkov terraform_validate"
+          for i in $TOOLS
+          do
+            pre-commit run $i --local-branch ${${{ github.event.pull_request.head.ref }}:-${{ github.ref }}}
+          done
+
+      - name: Check whitespace
+        run: |+
+          TOOLS="remove-tabs trailing-whitespace mixed-line-ending"
+          for i in $TOOLS
+          do
+            pre-commit run $i --local-branch ${${{ github.event.pull_request.head.ref }}:-${{ github.ref }}}
+          done
+
+      - name: Run sca checks
+        run: |+
+          pre-commit run license-check-npm --local-branch ${${{ github.event.pull_request.head.ref }}:-${{ github.ref }}}
+
+      - name: Run linting checks
+        run: |+
+          TOOLS="prettier typos check-json check-yaml"
+          for i in $TOOLS
+          do
+            pre-commit run $i --local-branch ${${{ github.event.pull_request.head.ref }}:-${{ github.ref }}}
+          done
+
+      - name: Run secrets scanning
+        run: |+
+          TOOLS="detect-private-key detect-secrets"
+          for i in $TOOLS
+          do
+            pre-commit run $i --local-branch ${${{ github.event.pull_request.head.ref }}:-${{ github.ref }}}
+          done
+
+      - name: hcltm build
+        uses: xntrik/hcltm-action@latest
+        with:
+          command: dashboard
+          files: "./threatmodels/*"
+          outdir: "./src"
+
+      - name: mkdocs build
+        run: make -B build-ci
+
+  # deploy:
+
+  #   runs-on: ubuntu-latest
+
+  #   steps:
+  #   - uses: actions/checkout@v3
+
+  #   - name: Integration
+  #     run: make apply
+
+  #   - name: clear CDN cache
+  #     run: make clear-cf
