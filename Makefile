@@ -27,7 +27,7 @@ help: ## This help.
 hcltminstall:
 	wget -qO- https://github.com/xntrik/hcltm/releases/download/v0.1.6/hcltm-linux-amd64.tar.gz | tar xvz -C /usr/local/bin/hcltm
 
-deps: ## install dependancies for development of this project; assumes `python3 -m venv .venv && source .venv/bin/activate`
+deps: ## install dependencies for development of this project; assumes `python3 -m venv .venv && source .venv/bin/activate`
 	pip install -U pip
 	pip install -U setuptools wheel
 	pip install -U -r requirements.txt
@@ -36,15 +36,12 @@ deps: ## install dependancies for development of this project; assumes `python3 
 	@ [ -f .secrets.baseline ] || ( detect-secrets scan > .secrets.baseline )
 	detect-secrets audit .secrets.baseline
 
-ci-deps: ## install dependancies for CI
+ci-deps: ## install dependencies for CI
 	pip install -U pip
 	pip install -U setuptools wheel
 	pip install -U -r requirements.txt
 	pre-commit autoupdate
 	git add .pre-commit-config.yaml
-	wget -qO- https://github.com/xntrik/hcltm/releases/download/v0.1.6/hcltm-linux-amd64.tar.gz | tar xvz -C ./hcltm
-	sudo chown runner:runner ./hcltm
-	sudo chmod a+x ./hcltm
 
 clean: ## Cleanup tmp files
 	@find . -type f -name '*.DS_Store' -delete 2>/dev/null

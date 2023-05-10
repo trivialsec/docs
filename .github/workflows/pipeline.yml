@@ -5,7 +5,7 @@ on:
     branches: ["main"]
 
 jobs:
-  build:
+  validate:
     runs-on: ubuntu-latest
 
     steps:
@@ -17,8 +17,19 @@ jobs:
           command: validate
           files: "./threatmodels/*"
 
-      - name: Install dependencies
-        run: make ci-deps
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Upgrade pip
+        run: |+
+          pip install -U --progress-bar off --no-python-version-warning pip
+          pip install -U --progress-bar off setuptools wheel
+
+      - name: Install test dependencies
+        run: pip install -U --progress-bar off pre-commit detect-secrets checkov
 
       - name: Run terraform checks
         run: |+
@@ -56,6 +67,20 @@ jobs:
             pre-commit run $i --local-branch ${${{ github.event.pull_request.head.ref }}:-${{ github.ref }}}
           done
 
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Upgrade pip
+        run: |+
+          pip install -U --progress-bar off --no-python-version-warning pip
+          pip install -U --progress-bar off setuptools wheel
+
+      - name: Install build dependencies
+        run: pip install -U --progress-bar off mkdocs mkdocs-material mkdocs-material-extensions
+
       - name: hcltm build
         uses: xntrik/hcltm-action@latest
         with:
@@ -64,17 +89,9 @@ jobs:
           outdir: "./src"
 
       - name: mkdocs build
-        run: make -B build-ci
-
-  # deploy:
-
-  #   runs-on: ubuntu-latest
-
-  #   steps:
-  #   - uses: actions/checkout@v3
-
-  #   - name: Integration
-  #     run: make apply
-
-  #   - name: clear CDN cache
-  #     run: make clear-cf
+        run: |+
+          rm src/dashboard.md
+          pre-commit run --verbose prettier --files src/*.md || true
+          sed -i 's/|    |    |/| Attributes  |    |/g' src/*.md
+          mkdocs build --strict --clean --verbose
+          cp src/img/favicon.png dist/assets/images/favicon.png
