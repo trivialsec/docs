@@ -5,7 +5,7 @@ threatmodel "Bearer JWT" {
   link         = "https://docs.trivialsec.com"
   author       = "[Chris Langton](https://github.com/0x73746F66)"
   created_at   = 1681972360
-  updated_at   = 1681972360
+  updated_at   = 1683679964
 
   attributes {
     new_initiative  = true
